@@ -81,35 +81,18 @@ main {
 /* コンパス針 */
 .compass-needle {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     transition: transform 0.3s ease-out;
+    transform-origin: center center;
     z-index: 5;
     pointer-events: none;
 }
 
-.compass-north {
-    position: absolute;
-    top: -130px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 18px;
-    font-weight: bold;
-    color: #e74c3c;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-}
-
-.compass-needle-line {
-    position: absolute;
-    width: 3px;
-    height: 120px;
-    background: linear-gradient(to bottom, #e74c3c 0%, #e74c3c 50%, #95a5a6 50%, #95a5a6 100%);
-    top: -120px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-radius: 2px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+.compass-needle svg {
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
 }
 
 .arrow-wrapper {

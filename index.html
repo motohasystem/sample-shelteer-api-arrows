@@ -24,14 +24,36 @@
             <div class="arrows-container">
                 <!-- コンパス針（北を指す） -->
                 <div id="compassNeedle" class="compass-needle">
-                    <div class="compass-north">N</div>
-                    <div class="compass-needle-line"></div>
+                    <svg width="280" height="280" viewBox="0 0 280 280" style="position: absolute; top: 0; left: 0;">
+                        <!-- 北側（赤） -->
+                        <path d="M140 140 L140 20 L155 60 L140 140 L125 60 Z"
+                              fill="#e74c3c"
+                              stroke="#c0392b"
+                              stroke-width="1"/>
+                        <!-- 南側（白） -->
+                        <path d="M140 140 L140 260 L155 220 L140 140 L125 220 Z"
+                              fill="#ffffff"
+                              stroke="#95a5a6"
+                              stroke-width="1"/>
+                        <!-- N表示 -->
+                        <text x="140" y="15"
+                              text-anchor="middle"
+                              font-size="18"
+                              font-weight="bold"
+                              fill="#e74c3c">N</text>
+                        <!-- S表示 -->
+                        <text x="140" y="275"
+                              text-anchor="middle"
+                              font-size="18"
+                              font-weight="bold"
+                              fill="#95a5a6">S</text>
+                    </svg>
                 </div>
 
                 <div class="arrow-wrapper">
                     <div id="arrow1" class="arrow arrow-1">
                         <svg width="100" height="100" viewBox="0 0 100 100">
-                            <path d="M50 10 L50 70 M50 70 L35 55 M50 70 L65 55"
+                            <path d="M50 90 L50 30 M50 30 L35 45 M50 30 L65 45"
                                   stroke="#ff3333"
                                   stroke-width="8"
                                   stroke-linecap="round"
@@ -45,7 +67,7 @@
                 <div class="arrow-wrapper">
                     <div id="arrow2" class="arrow arrow-2">
                         <svg width="80" height="80" viewBox="0 0 100 100">
-                            <path d="M50 10 L50 70 M50 70 L35 55 M50 70 L65 55"
+                            <path d="M50 90 L50 30 M50 30 L35 45 M50 30 L65 45"
                                   stroke="#ff8833"
                                   stroke-width="8"
                                   stroke-linecap="round"
@@ -59,7 +81,7 @@
                 <div class="arrow-wrapper">
                     <div id="arrow3" class="arrow arrow-3">
                         <svg width="60" height="60" viewBox="0 0 100 100">
-                            <path d="M50 10 L50 70 M50 70 L35 55 M50 70 L65 55"
+                            <path d="M50 90 L50 30 M50 30 L35 45 M50 30 L65 45"
                                   stroke="#ffbb33"
                                   stroke-width="8"
                                   stroke-linecap="round"

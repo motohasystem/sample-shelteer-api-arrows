@@ -417,10 +417,7 @@ function updateCompassNeedle() {
     // デバイスの向きの逆方向に回転させることで、常に北を指す
     const rotation = -state.deviceHeading;
 
-    elements.compassNeedle.style.transform = `
-        translate(-50%, -50%)
-        rotate(${rotation}deg)
-    `;
+    elements.compassNeedle.style.transform = `rotate(${rotation}deg)`;
 }
 
 // 方角のテキスト取得
