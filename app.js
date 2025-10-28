@@ -17,6 +17,11 @@ const elements = {
         document.getElementById('arrow2'),
         document.getElementById('arrow3')
     ],
+    arrowLabels: [
+        document.getElementById('arrow1Label'),
+        document.getElementById('arrow2Label'),
+        document.getElementById('arrow3Label')
+    ],
     compassNeedle: document.getElementById('compassNeedle'),
     shelterCards: document.getElementById('shelterCards'),
     error: document.getElementById('error'),
@@ -396,8 +401,8 @@ function updateArrow() {
         );
 
         // デバイスの向きを考慮した相対角度
-        // bearing - deviceHeading で、デバイスから見た避難所の方向
-        const targetAngle = bearing - state.deviceHeading;
+        // bearing + deviceHeading で、デバイスから見た避難所の方向
+        const targetAngle = bearing + state.deviceHeading;
 
         // 最短経路で回転するための累積角度を計算
         state.arrowRotations[index] = getShortestRotation(state.arrowRotations[index], targetAngle);
@@ -412,6 +417,11 @@ function updateArrow() {
             translateY(-${radius}px)
         `;
 
+        // ラベルに距離を表示
+        if (elements.arrowLabels[index]) {
+            elements.arrowLabels[index].textContent = formatDistance(shelter.distance);
+        }
+
         console.log(`矢印${index + 1}: 方角=${Math.round(bearing)}°, デバイス=${Math.round(state.deviceHeading)}°, 相対=${Math.round(targetAngle)}°, 累積=${Math.round(state.arrowRotations[index])}°`);
     });
 }
@@ -420,8 +430,8 @@ function updateArrow() {
 function updateCompassNeedle() {
     if (!elements.compassNeedle) return;
 
-    // デバイスの向きの逆方向に回転させることで、常に北を指す
-    const targetAngle = -state.deviceHeading;
+    // デバイスの向きと逆方向に回転させることで、常に北を指す
+    const targetAngle = state.deviceHeading;
 
     // 最短経路で回転するための累積角度を計算
     state.compassRotation = getShortestRotation(state.compassRotation, targetAngle);
