@@ -1,0 +1,343 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    color: white;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.status {
+    background: rgba(255,255,255,0.95);
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 500;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* 矢印コンテナ（円形配置） */
+.arrows-container {
+    background: rgba(255,255,255,0.95);
+    border-radius: 50%;
+    width: 280px;
+    height: 280px;
+    margin: 0 auto;
+    position: relative;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 中心点の表示 */
+.arrows-container::before {
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: #667eea;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* コンパス針 */
+.compass-needle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: transform 0.3s ease-out;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.compass-north {
+    position: absolute;
+    top: -130px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 18px;
+    font-weight: bold;
+    color: #e74c3c;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.compass-needle-line {
+    position: absolute;
+    width: 3px;
+    height: 120px;
+    background: linear-gradient(to bottom, #e74c3c 0%, #e74c3c 50%, #95a5a6 50%, #95a5a6 100%);
+    top: -120px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 2px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.arrow-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-origin: center;
+    transition: transform 0.3s ease-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.arrow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: none; /* 個別の回転は不要 */
+}
+
+.arrow svg {
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
+}
+
+.arrow-label {
+    font-size: 13px;
+    font-weight: bold;
+    color: #666;
+    background: rgba(255,255,255,0.95);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    border: 2px solid #fff;
+}
+
+/* 避難所カード */
+.shelter-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.shelter-card {
+    background: rgba(255,255,255,0.95);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.shelter-rank {
+    font-size: 12px;
+    font-weight: bold;
+    color: #ff3333;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.shelter-name {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+.shelter-details {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 12px;
+}
+
+.detail-item {
+    flex: 1;
+}
+
+.detail-label {
+    font-size: 11px;
+    color: #666;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.detail-value {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    display: block;
+}
+
+.shelter-address {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.4;
+}
+
+.calibrate-btn {
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.calibrate-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.error {
+    background: #ff6b6b;
+    color: white;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 14px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+footer {
+    text-align: center;
+    color: white;
+    margin-top: 20px;
+}
+
+.note {
+    font-size: 14px;
+    opacity: 0.9;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+/* アニメーション */
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.arrow.pulsing {
+    animation: pulse 2s infinite;
+}
+
+/* ローディングアニメーション */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.status.loading::after {
+    content: "";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-left: 8px;
+    border: 2px solid #667eea;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 360px) {
+    header h1 {
+        font-size: 20px;
+    }
+
+    .arrows-container {
+        width: 240px;
+        height: 240px;
+    }
+
+    .arrows-container::before {
+        width: 10px;
+        height: 10px;
+    }
+
+    .arrow-wrapper svg {
+        width: 70px;
+        height: 70px;
+    }
+
+    .arrow-wrapper:nth-child(2) svg {
+        width: 56px;
+        height: 56px;
+    }
+
+    .arrow-wrapper:nth-child(3) svg {
+        width: 42px;
+        height: 42px;
+    }
+
+    .arrow-label {
+        width: 20px;
+        height: 20px;
+        font-size: 11px;
+    }
+
+    .shelter-card {
+        padding: 12px;
+    }
+
+    .shelter-name {
+        font-size: 14px;
+    }
+
+    .detail-value {
+        font-size: 14px;
+    }
+}
+
+/* ダークモード対応 */
+@media (prefers-color-scheme: dark) {
+    body {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    }
+}

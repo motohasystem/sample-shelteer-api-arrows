@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>緊急避難所ナビ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>緊急避難所ナビ</h1>
+        </header>
+
+        <main>
+            <!-- ステータス表示 -->
+            <div id="status" class="status">
+                位置情報を取得中...
+            </div>
+
+            <!-- 矢印表示エリア（3つ） -->
+            <div class="arrows-container">
+                <!-- コンパス針（北を指す） -->
+                <div id="compassNeedle" class="compass-needle">
+                    <div class="compass-north">N</div>
+                    <div class="compass-needle-line"></div>
+                </div>
+
+                <div class="arrow-wrapper">
+                    <div id="arrow1" class="arrow arrow-1">
+                        <svg width="100" height="100" viewBox="0 0 100 100">
+                            <path d="M50 10 L50 70 M50 70 L35 55 M50 70 L65 55"
+                                  stroke="#ff3333"
+                                  stroke-width="8"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="arrow-label">1</div>
+                </div>
+
+                <div class="arrow-wrapper">
+                    <div id="arrow2" class="arrow arrow-2">
+                        <svg width="80" height="80" viewBox="0 0 100 100">
+                            <path d="M50 10 L50 70 M50 70 L35 55 M50 70 L65 55"
+                                  stroke="#ff8833"
+                                  stroke-width="8"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="arrow-label">2</div>
+                </div>
+
+                <div class="arrow-wrapper">
+                    <div id="arrow3" class="arrow arrow-3">
+                        <svg width="60" height="60" viewBox="0 0 100 100">
+                            <path d="M50 10 L50 70 M50 70 L35 55 M50 70 L65 55"
+                                  stroke="#ffbb33"
+                                  stroke-width="8"
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="arrow-label">3</div>
+                </div>
+            </div>
+
+            <!-- 避難所情報カード（3件） -->
+            <div id="shelterCards" class="shelter-cards">
+                <!-- JavaScriptで動的に生成 -->
+            </div>
+
+            <!-- コンパス校正ボタン -->
+            <button id="calibrateBtn" class="calibrate-btn" style="display: none;">
+                コンパスを校正
+            </button>
+
+            <!-- エラー表示 -->
+            <div id="error" class="error" style="display: none;"></div>
+        </main>
+
+        <footer>
+            <p class="note">円の中心があなたの位置。矢印が指す方向に避難所があります</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
