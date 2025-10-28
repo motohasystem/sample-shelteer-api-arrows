@@ -3,7 +3,10 @@ const state = {
     userLocation: null,
     nearestShelters: [], // 最寄り3件の避難所
     deviceHeading: 0,
-    shelters: []
+    shelters: [],
+    // 角度の累積値（360度境界問題対策）
+    compassRotation: 0, // コンパス針の累積回転角度
+    arrowRotations: [0, 0, 0] // 各矢印の累積回転角度
 };
 
 // DOM要素
@@ -394,7 +397,10 @@ function updateArrow() {
 
         // デバイスの向きを考慮した相対角度
         // bearing - deviceHeading で、デバイスから見た避難所の方向
-        const relativeAngle = bearing - state.deviceHeading;
+        const targetAngle = bearing - state.deviceHeading;
+
+        // 最短経路で回転するための累積角度を計算
+        state.arrowRotations[index] = getShortestRotation(state.arrowRotations[index], targetAngle);
 
         // 円周上に配置
         // translate(-50%, -50%): 中心を基準点に
@@ -402,11 +408,11 @@ function updateArrow() {
         // translateY(-radius): 上方向（0度方向）に移動
         arrowWrapper.style.transform = `
             translate(-50%, -50%)
-            rotate(${relativeAngle}deg)
+            rotate(${state.arrowRotations[index]}deg)
             translateY(-${radius}px)
         `;
 
-        console.log(`矢印${index + 1}: 方角=${Math.round(bearing)}°, デバイス=${Math.round(state.deviceHeading)}°, 相対=${Math.round(relativeAngle)}°`);
+        console.log(`矢印${index + 1}: 方角=${Math.round(bearing)}°, デバイス=${Math.round(state.deviceHeading)}°, 相対=${Math.round(targetAngle)}°, 累積=${Math.round(state.arrowRotations[index])}°`);
     });
 }
 
@@ -415,9 +421,13 @@ function updateCompassNeedle() {
     if (!elements.compassNeedle) return;
 
     // デバイスの向きの逆方向に回転させることで、常に北を指す
-    const rotation = -state.deviceHeading;
+    const targetAngle = -state.deviceHeading;
 
-    elements.compassNeedle.style.transform = `rotate(${rotation}deg)`;
+    // 最短経路で回転するための累積角度を計算
+    state.compassRotation = getShortestRotation(state.compassRotation, targetAngle);
+
+    // 中心配置を維持しながら回転
+    elements.compassNeedle.style.transform = `translate(-50%, -50%) rotate(${state.compassRotation}deg)`;
 }
 
 // 方角のテキスト取得
@@ -480,6 +490,22 @@ function formatDistance(meters) {
     } else {
         return `${(meters / 1000).toFixed(1)}km`;
     }
+}
+
+// 角度の最短経路を計算（360度境界問題対策）
+function getShortestRotation(currentRotation, targetAngle) {
+    // 現在の累積回転角度を0-360の範囲に正規化
+    const normalizedCurrent = currentRotation % 360;
+
+    // 目標角度との差分を計算
+    let diff = targetAngle - normalizedCurrent;
+
+    // -180〜180の範囲に正規化（最短経路）
+    while (diff > 180) diff -= 360;
+    while (diff < -180) diff += 360;
+
+    // 新しい累積回転角度を返す
+    return currentRotation + diff;
 }
 
 // 2点間の距離を計算（Haversine公式）

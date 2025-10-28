@@ -81,10 +81,9 @@ main {
 /* コンパス針 */
 .compass-needle {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     transition: transform 0.3s ease-out;
     transform-origin: center center;
     z-index: 5;
@@ -92,6 +91,7 @@ main {
 }
 
 .compass-needle svg {
+    display: block;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
 }
 
