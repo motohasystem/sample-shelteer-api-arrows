@@ -295,10 +295,14 @@ function findNearestShelter() {
     sheltersWithDistance.sort((a, b) => a.distance - b.distance);
     state.nearestShelters = sheltersWithDistance.slice(0, 3);
 
-    console.log('最寄りの避難所3件:', state.nearestShelters.map(s => ({
-        name: s.properties.name || s.properties['名称'],
-        distance: Math.round(s.distance) + 'm'
-    })));
+    console.log('最寄りの避難所3件:', state.nearestShelters.map(s => {
+        const props = s.properties;
+        return {
+            name: props.name || props['名称'] || props['施設・場所名'] || props['施設名'] || props['場所名'] || '名称不明',
+            distance: Math.round(s.distance) + 'm',
+            availableFields: Object.keys(props) // デバッグ用: 利用可能なフィールド一覧
+        };
+    }));
 
     updateShelterInfo();
 }
@@ -385,13 +389,16 @@ function updateArrow() {
     // コンパス針を更新（常に北を指す）
     updateCompassNeedle();
 
-    // 円の半径（CSSと合わせる: 280px / 2 = 140px から矢印サイズ分を引く）
-    const radius = 100; // ピクセル
+    // 各矢印の配置半径（ピクセル）- 差をつけて文字が重ならないように
+    const radiuses = [110, 85, 60]; // 矢印1（最寄り）: 長い、矢印2: 中間、矢印3: 短い
 
     // 各避難所への矢印を更新
     state.nearestShelters.forEach((shelter, index) => {
         const arrowWrapper = elements.arrows[index]?.parentElement;
         if (!arrowWrapper) return;
+
+        // この矢印の配置半径
+        const radius = radiuses[index];
 
         // 避難所への方角を計算
         const bearing = calculateBearing(
@@ -423,7 +430,7 @@ function updateArrow() {
             elements.arrowLabels[index].textContent = formatDistance(shelter.distance);
         }
 
-        console.log(`矢印${index + 1}: 方角=${Math.round(bearing)}°, デバイス=${Math.round(state.deviceHeading)}°, 相対=${Math.round(targetAngle)}°, 累積=${Math.round(state.arrowRotations[index])}°`);
+        console.log(`矢印${index + 1}: 方角=${Math.round(bearing)}°, デバイス=${Math.round(state.deviceHeading)}°, 相対=${Math.round(targetAngle)}°, 累積=${Math.round(state.arrowRotations[index])}°, 半径=${radius}px`);
     });
 }
 
@@ -457,8 +464,9 @@ function updateShelterInfo() {
     // カード形式で3件の情報を表示
     const cardsHTML = state.nearestShelters.map((shelter, index) => {
         const props = shelter.properties;
-        const name = props.name || props['名称'] || '名称不明';
-        const address = props.address || props['住所'] || '住所不明';
+        // 複数のフィールド名をチェック（APIの仕様に対応）
+        const name = props.name || props['名称'] || props['施設・場所名'] || props['施設名'] || props['場所名'] || '名称不明';
+        const address = props.address || props['住所'] || props['所在地'] || '住所不明';
         const distance = formatDistance(shelter.distance);
 
         const bearing = calculateBearing(
