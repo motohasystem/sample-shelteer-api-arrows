@@ -401,8 +401,8 @@ function updateArrow() {
         );
 
         // デバイスの向きを考慮した相対角度
-        // bearing + deviceHeading で、デバイスから見た避難所の方向
-        const targetAngle = bearing + state.deviceHeading;
+        // bearing - deviceHeading で、デバイスから見た避難所の方向
+        const targetAngle = bearing - state.deviceHeading;
 
         // 最短経路で回転するための累積角度を計算
         state.arrowRotations[index] = getShortestRotation(state.arrowRotations[index], targetAngle);
@@ -431,7 +431,7 @@ function updateCompassNeedle() {
     if (!elements.compassNeedle) return;
 
     // デバイスの向きと逆方向に回転させることで、常に北を指す
-    const targetAngle = state.deviceHeading;
+    const targetAngle = -state.deviceHeading;
 
     // 最短経路で回転するための累積角度を計算
     state.compassRotation = getShortestRotation(state.compassRotation, targetAngle);
