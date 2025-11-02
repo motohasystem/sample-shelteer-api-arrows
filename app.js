@@ -374,8 +374,8 @@ function handleOrientation(event) {
     }
 
     if (heading !== null) {
-        // センサーの値を反転（端末を時計回りに回すと、針が反時計回りに回転するように）
-        state.deviceHeading = 360 - heading;
+        // デバイスの向き（北を0度として時計回り）
+        state.deviceHeading = heading;
         updateArrow();
     }
 }
