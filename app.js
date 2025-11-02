@@ -361,6 +361,11 @@ function startTracking() {
             timeout: 27000
         }
     );
+
+    // 定期的にセンサーの向きに同期（累積誤差を防ぐ）
+    setInterval(() => {
+        syncCompassToSensor();
+    }, 500); // 500msごとに同期
 }
 
 // デバイスの向き変更ハンドラ
@@ -446,6 +451,56 @@ function updateCompassNeedle() {
 
     // 中心配置を維持しながら回転
     elements.compassNeedle.style.transform = `translate(-50%, -50%) rotate(${state.compassRotation}deg)`;
+}
+
+// センサーの向きに定期的に同期（累積誤差を防ぐ）
+function syncCompassToSensor() {
+    if (!state.userLocation || state.nearestShelters.length === 0) {
+        return;
+    }
+
+    // コンパス針の目標角度
+    const compassTargetAngle = -state.deviceHeading;
+
+    // 累積角度と目標角度の差が大きい場合は同期
+    const compassDiff = Math.abs((state.compassRotation % 360) - (compassTargetAngle % 360));
+    if (compassDiff > 5) {
+        // 累積角度を目標角度に合わせる（ただし最短経路で）
+        state.compassRotation = getShortestRotation(state.compassRotation, compassTargetAngle);
+        if (elements.compassNeedle) {
+            elements.compassNeedle.style.transform = `translate(-50%, -50%) rotate(${state.compassRotation}deg)`;
+        }
+        console.log(`コンパス同期: 累積=${Math.round(state.compassRotation)}°, 目標=${Math.round(compassTargetAngle)}°`);
+    }
+
+    // 各矢印の同期
+    state.nearestShelters.forEach((shelter, index) => {
+        const bearing = calculateBearing(
+            state.userLocation.lat,
+            state.userLocation.lng,
+            shelter.lat,
+            shelter.lng
+        );
+        const arrowTargetAngle = bearing - state.deviceHeading;
+
+        // 累積角度と目標角度の差が大きい場合は同期
+        const arrowDiff = Math.abs((state.arrowRotations[index] % 360) - (arrowTargetAngle % 360));
+        if (arrowDiff > 5) {
+            state.arrowRotations[index] = getShortestRotation(state.arrowRotations[index], arrowTargetAngle);
+
+            const arrowWrapper = elements.arrows[index]?.parentElement;
+            if (arrowWrapper) {
+                const radiuses = [110, 85, 60];
+                const radius = radiuses[index];
+                arrowWrapper.style.transform = `
+                    translate(-50%, -50%)
+                    rotate(${state.arrowRotations[index]}deg)
+                    translateY(-${radius}px)
+                `;
+            }
+            console.log(`矢印${index + 1}同期: 累積=${Math.round(state.arrowRotations[index])}°, 目標=${Math.round(arrowTargetAngle)}°`);
+        }
+    });
 }
 
 // 方角のテキスト取得
